@@ -1,14 +1,6 @@
 <!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
+streamed_controller
+2023, Archie Iwakura
 -->
 
 # streamed_controller
@@ -30,20 +22,20 @@ and the Flutter guide for
 1) Define controller class (and state class, if you using streamed_controller for complex state managment):
 
 ```dart
-class TestControllerBase extends BaseStreamedController<int> {
-TestControllerBase() : super(initialState: 0);
-
-Future<void> incrementAwaitable() => handleStream(() async* {
-        yield 1;
-        await Future.delayed(const Duration(seconds: 1));
-        yield 2;
-    }());
-
-void increment() => handleStream(() async* {
-        yield 3;
-        await Future.delayed(const Duration(seconds: 2));
-        yield 4;
-    }());
+class TestControllerBase extends BaseStreamedController<int> with ConcurrentConcurrencyMixin {
+    TestControllerBase() : super(initialState: 0);
+    
+    Future<void> incrementAwaitable() => handleStream(() async* {
+           yield 1;
+           await Future.delayed(const Duration(seconds: 1));
+           yield 2;
+       }());
+    
+    void increment() => handleStream(() async* {
+           yield 3;
+           await Future.delayed(const Duration(seconds: 2));
+           yield 4;
+       }());
 }
 ```
 
