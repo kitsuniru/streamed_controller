@@ -8,7 +8,7 @@ void main() {
 class TestControllerBase extends BaseStreamedController<int> {
   TestControllerBase() : super(initialState: 0);
 
-  void increment() => handleStream(() async* {
+  void increment() => handle(() async* {
         yield state + 1;
         await Future.delayed(const Duration(seconds: 2));
         yield state + 2;

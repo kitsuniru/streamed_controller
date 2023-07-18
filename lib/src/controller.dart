@@ -20,9 +20,8 @@ abstract class BaseStreamedController<State extends Object>
   /// Is controller processing your request?
   bool get isProcessing => false;
 
-  Future<void> handleStream(Stream<dynamic> $stream) =>
-      throw UnimplementedError(
-          'Controller should use one of concurrency mixin');
+  FutureOr<void> handle(Stream<Object> $stream) => throw UnimplementedError(
+      'Controller should use one of concurrency mixin');
 
   BaseStreamedController({required State initialState}) : _state = initialState;
 }

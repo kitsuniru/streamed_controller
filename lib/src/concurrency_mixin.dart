@@ -17,7 +17,7 @@ mixin ConcurrentConcurrencyMixin<State extends Object>
   }
 
   @override
-  Future<void> handleStream(Stream<dynamic> $stream) async {
+  void handle(Stream<dynamic> $stream) {
     final $subscription = ($stream as Stream<State>).listen($setState);
     _$processingCalls++;
     $subscription.onDone(() => _cancelSub($subscription));
@@ -41,17 +41,20 @@ mixin DroppableConcurrencyMixin<State extends Object>
     _isProcessing = false;
   }
 
+  Future<void> _$catchError(Object? e, StackTrace s) {
+    _$endSub();
+    Error.throwWithStackTrace(e!, s);
+  }
+
   @override
-  Future<void> handleStream(Stream $stream) async {
+  Future<void> handle(Stream<Object> $stream) async {
     if ($subscription != null) return;
     _isProcessing = true;
-    $subscription = ($stream as Stream<State>).listen($setState)
-      ..onDone(_$endSub)
-      ..onError((e, s) {
-        _$endSub();
-        Error.throwWithStackTrace(e, s);
-      });
-    await $subscription?.asFuture();
+    $subscription = ($stream as Stream<State>).listen($setState);
+    return $subscription
+        ?.asFuture<void>()
+        .whenComplete(_$endSub)
+        .onError(_$catchError);
   }
 }
 
@@ -66,11 +69,10 @@ mixin DebouncedDroppableConcurrencyMixin<State extends Object>
   Timer? _$debounceTimer;
 
   @override
-  Future<void> handleStream(Stream $stream) async {
+  Future<void> handle(Stream<Object> $stream) async {
     // For debouncing handle calls
     _$debounceTimer?.cancel();
-    _$debounceTimer =
-        Timer(debounceDuration, () => super.handleStream($stream));
+    _$debounceTimer = Timer(debounceDuration, () => super.handle($stream));
 
     return Future.value();
   }
@@ -88,20 +90,20 @@ mixin ThrottledDroppableConcurrencyMixin<State extends Object>
   DateTime? _$lastRun;
 
   @override
-  Future<void> handleStream(Stream $stream) async {
+  Future<void> handle(Stream<Object> $stream) async {
     final $lastRun = _$lastRun;
     final now = DateTime.now();
 
     if ($lastRun == null) {
       _$lastRun = now;
-      return super.handleStream($stream);
+      return super.handle($stream);
     } else {
       final diff = now.difference($lastRun);
       if (diff < throttleDuration) {
         return Future.value();
       }
       _$lastRun = now;
-      return super.handleStream($stream);
+      return super.handle($stream);
     }
   }
 }
@@ -112,10 +114,9 @@ mixin ThrottledDroppableConcurrencyMixin<State extends Object>
 mixin RestartableConcurrencyMixin<State extends Object>
     on BaseStreamedController<State> implements StreamedSingleSubMixin<State> {
   @override
-  Future<void> handleStream(Stream $stream) async {
+  void handle(Stream<Object> $stream) {
     unawaited($subscription?.cancel());
     $subscription = ($stream as Stream<State>).listen($setState)
       ..onDone($destroySubscription);
-    await $subscription?.asFuture();
   }
 }
