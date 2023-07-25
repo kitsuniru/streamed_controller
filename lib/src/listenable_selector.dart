@@ -1,8 +1,14 @@
+/*
+ *
+ * Mikhail Matiunin <plugfox@gmail.com>
+ */
+
 import 'package:flutter/foundation.dart'
     show ChangeNotifier, Listenable, ValueListenable, VoidCallback;
 
 /// Selector from [Listenable]
-typedef ListenableSelector<Controller extends Listenable, Value> = Value Function(
+typedef ListenableSelector<Controller extends Listenable, Value> = Value
+    Function(
   Controller controller,
 );
 
@@ -24,7 +30,8 @@ typedef ListenableFilter<Value> = bool Function(Value prev, Value next);
 ///   builder: (context, locale, child) => Text(locale.languageCode),
 /// )
 /// ```
-extension ListenableSelectorExtension<Controller extends Listenable> on Controller {
+extension ListenableSelectorExtension<Controller extends Listenable>
+    on Controller {
   /// Transform [Listenable] in to [ValueListenable]
   ValueListenable<Value> select<Value>(
     ListenableSelector<Controller, Value> selector, [

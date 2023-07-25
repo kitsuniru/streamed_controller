@@ -25,6 +25,16 @@ class DroppableController = TestControllerBase
     with StreamedSingleSubMixin, DroppableConcurrencyMixin;
 class ConcurrentController = TestControllerBase with ConcurrentConcurrencyMixin;
 
+class SequentalController extends TestControllerBase
+    with SequentalConcurrentMixin {
+  @override
+  void increment() => handle(() async* {
+        yield state + 1;
+        await Future.delayed(const Duration(seconds: 2));
+        yield state + 1;
+      }());
+}
+
 void main() {
   test('async increment state', () async {
     final controller = DroppableController();
@@ -66,5 +76,17 @@ void main() {
 
     await Future.delayed(const Duration(seconds: 6));
     expect(controller.state, 2);
+  });
+
+  test('sequental test', () async {
+    final controller = SequentalController();
+    controller.addListener(
+        () => log('[${controller.runtimeType}] State: ${controller.state}'));
+
+    controller.increment();
+    controller.increment();
+
+    await Future.delayed(const Duration(seconds: 8));
+    expect(controller.state, 4);
   });
 }

@@ -1,3 +1,8 @@
+/*
+ * Base class for all streamed controllers
+ * Archie Kitsushimo <Kitsushimo.dev@gmail.com>, 25 July 2023
+ */
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -17,10 +22,13 @@ abstract class BaseStreamedController<State extends Object>
     notifyListeners();
   }
 
+  /// Maximum processing time for each event
+  Duration? get eventTimeout => null;
+
   /// Is controller processing your request?
   bool get isProcessing => false;
 
-  FutureOr<void> handle(Stream<Object> $stream) => throw UnimplementedError(
+  FutureOr<void> handle(Stream<State> $stream) => throw UnimplementedError(
       'Controller should use one of concurrency mixin');
 
   BaseStreamedController({required State initialState}) : _state = initialState;

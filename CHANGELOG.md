@@ -1,3 +1,9 @@
+## 0.3.0
+* feat: SequentalConcurrency mixin using AsyncQueue
+* feat: ThrottledDroppableConcurrencyMixin can be awaited until throttle end
+* refactor: reorganized package structure
+* inner_fix: file signing (myself and author of selector feature)
+
 ## 0.2.0
 
 * feat: any event (on ```DroppableConcurrencyMixin``` and it descendants) can be awaited as future (until stream finishes working)
