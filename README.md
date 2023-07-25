@@ -25,13 +25,13 @@ streamed_controller
 class TestControllerBase extends BaseStreamedController<int> with ConcurrentConcurrencyMixin {
     TestControllerBase() : super(initialState: 0);
     
-    Future<void> incrementAwaitable() => handleStream(() async* {
+    Future<void> incrementAwaitable() => handle(() async* {
            yield 1;
            await Future.delayed(const Duration(seconds: 1));
            yield 2;
        }());
     
-    void increment() => handleStream(() async* {
+    void increment() => handle(() async* {
            yield 3;
            await Future.delayed(const Duration(seconds: 2));
            yield 4;
