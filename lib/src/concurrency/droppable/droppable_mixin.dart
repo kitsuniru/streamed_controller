@@ -11,10 +11,6 @@ import 'package:streamed_controller/src/single_subscription_mixin.dart';
 /// if something else is being processed at the moment
 mixin DroppableConcurrencyMixin<State extends Object>
     on BaseStreamedController<State> implements StreamedSingleSubMixin<State> {
-  @override
-  @nonVirtual
-  bool get isProcessing => _isProcessing;
-
   bool _isProcessing = false;
 
   Future<void> _$endSub() async {
@@ -22,13 +18,17 @@ mixin DroppableConcurrencyMixin<State extends Object>
     _isProcessing = false;
   }
 
-  Future<void> _$catchError(Object? e, StackTrace s) {
+  void _$catchError(Object? e, StackTrace s) {
     _$endSub();
-    Error.throwWithStackTrace(e!, s);
+    $onError(e, s);
   }
 
   @override
-  Future<void> handle(Stream<State> $stream) async {
+  @nonVirtual
+  bool get isProcessing => _isProcessing;
+
+  @override
+  Future<void> $handle(Stream<State> $stream) async {
     if ($subscription != null) return;
     _isProcessing = true;
     $subscription = $stream.listen($setState);

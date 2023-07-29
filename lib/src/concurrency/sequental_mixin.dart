@@ -25,7 +25,7 @@ mixin SequentalConcurrentMixin<State extends Object>
 
   @nonVirtual
   @override
-  Future<void> handle(Stream<State> $stream) async {
+  Future<void> $handle(Stream<State> $stream) async {
     Future<void> $queueObject() {
       final $subscription = $stream.listen($setState);
       var $future = $subscription
@@ -33,9 +33,7 @@ mixin SequentalConcurrentMixin<State extends Object>
           .whenComplete(() => _cancelSub($subscription))
           .onError((e, s) {
         _cancelSub($subscription);
-        if (e != null) {
-          Error.throwWithStackTrace(e, s);
-        }
+        $onError(e, s);
       });
 
       if (eventTimeout != null) {

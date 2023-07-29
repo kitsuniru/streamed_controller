@@ -12,22 +12,22 @@ mixin ConcurrentConcurrencyMixin<State extends Object>
     on BaseStreamedController<State> {
   int _$processingCalls = 0;
 
-  @override
-  bool get isProcessing => _$processingCalls > 0;
-
   Future<void> _cancelSub(StreamSubscription $subscription) async {
     await $subscription.cancel();
     _$processingCalls--;
   }
 
   @override
-  void handle(Stream<State> $stream) {
+  bool get isProcessing => _$processingCalls > 0;
+
+  @override
+  void $handle(Stream<State> $stream) {
     final $subscription = ($stream).listen($setState);
     _$processingCalls++;
     $subscription.onDone(() => _cancelSub($subscription));
     $subscription.onError((e, s) {
       _cancelSub($subscription);
-      Error.throwWithStackTrace(e, s);
+      $onError(e, s);
     });
   }
 }

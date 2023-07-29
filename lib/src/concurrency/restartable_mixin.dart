@@ -14,8 +14,10 @@ import 'package:streamed_controller/src/single_subscription_mixin.dart';
 mixin RestartableConcurrencyMixin<State extends Object>
     on BaseStreamedController<State> implements StreamedSingleSubMixin<State> {
   @override
-  void handle(Stream<State> $stream) {
+  void $handle(Stream<State> $stream) {
     unawaited($subscription?.cancel());
-    $subscription = $stream.listen($setState)..onDone($destroySubscription);
+    $subscription = $stream.listen($setState)
+      ..onDone($destroySubscription)
+      ..onError($onError);
   }
 }

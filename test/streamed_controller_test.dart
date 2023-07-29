@@ -1,18 +1,19 @@
 import 'dart:developer';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:streamed_controller/src/observer/controller_observer.dart';
 import 'package:streamed_controller/streamed_controller.dart';
 
 class TestControllerBase extends BaseStreamedController<int> {
   TestControllerBase() : super(initialState: 0);
 
-  Future<void> incrementAwaitable() async => await handle(() async* {
+  Future<void> incrementAwaitable() async => await event(() async* {
         yield 1;
         await Future.delayed(const Duration(seconds: 1));
         yield 2;
       }());
 
-  void increment() => handle(() async* {
+  void increment() => event(() async* {
         yield 3;
         await Future.delayed(const Duration(seconds: 2));
         yield 4;
@@ -28,7 +29,7 @@ class ConcurrentController = TestControllerBase with ConcurrentConcurrencyMixin;
 class SequentalController extends TestControllerBase
     with SequentalConcurrentMixin {
   @override
-  void increment() => handle(() async* {
+  void increment() => event(() async* {
         yield state + 1;
         await Future.delayed(const Duration(seconds: 2));
         yield state + 1;
@@ -38,8 +39,7 @@ class SequentalController extends TestControllerBase
 void main() {
   test('async increment state', () async {
     final controller = DroppableController();
-    controller.addListener(
-        () => print('[${controller.runtimeType}] State: ${controller.state}'));
+    StreamedControllerObserver.observer = BaseControllerObserver();
 
     await controller.incrementAwaitable();
     await controller.incrementAwaitable();

@@ -17,27 +17,27 @@ import 'droppable_mixin.dart';
 mixin ThrottledDroppableConcurrencyMixin<State extends Object>
     on BaseStreamedController<State>
     implements StreamedSingleSubMixin<State>, DroppableConcurrencyMixin<State> {
+  DateTime? _$lastRun;
+
   /// Interval between handling each event
   @mustBeOverridden
   Duration get throttleDuration;
 
-  DateTime? _$lastRun;
-
   @override
-  Future<void> handle(Stream<State> $stream) async {
+  Future<void> $handle(Stream<State> $stream) async {
     final $lastRun = _$lastRun;
     final now = DateTime.now();
 
     if ($lastRun == null) {
       _$lastRun = now;
-      return super.handle($stream);
+      return super.$handle($stream);
     } else {
       final diff = now.difference($lastRun);
       if (diff < throttleDuration) {
         return Future.delayed(diff.difference(throttleDuration));
       }
       _$lastRun = now;
-      return super.handle($stream);
+      return super.$handle($stream);
     }
   }
 }

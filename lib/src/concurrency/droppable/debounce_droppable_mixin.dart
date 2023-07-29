@@ -18,17 +18,17 @@ import 'droppable_mixin.dart';
 mixin DebouncedDroppableConcurrencyMixin<State extends Object>
     on BaseStreamedController<State>
     implements StreamedSingleSubMixin<State>, DroppableConcurrencyMixin<State> {
+  Timer? _$debounceTimer;
+
   /// Waiting time before processing event
   @mustBeOverridden
   Duration get debounceDuration;
 
-  Timer? _$debounceTimer;
-
   @override
-  Future<void> handle(Stream<State> $stream) async {
+  Future<void> $handle(Stream<State> $stream) async {
     // For debouncing handle calls
     _$debounceTimer?.cancel();
-    _$debounceTimer = Timer(debounceDuration, () => super.handle($stream));
+    _$debounceTimer = Timer(debounceDuration, () => super.$handle($stream));
 
     return;
   }
