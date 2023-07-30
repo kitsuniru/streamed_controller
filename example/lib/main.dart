@@ -5,14 +5,17 @@ void main() {
   runApp(const MyApp());
 }
 
-class TestControllerBase extends BaseStreamedController<int> {
-  TestControllerBase() : super(initialState: 0);
+class TestControllerBase extends StreamedController<int> {
+  TestControllerBase()
+      : super(initialState: 0, eventHandler: SequentalConcurrentHandler());
 
-  void increment() => event(() async* {
+  void increment() => handle(_increment());
+
+  Stream<int> _increment() => () async* {
         yield state + 1;
         await Future.delayed(const Duration(seconds: 2));
         yield state + 2;
-      }());
+      }();
 }
 
 class MyApp extends StatelessWidget {

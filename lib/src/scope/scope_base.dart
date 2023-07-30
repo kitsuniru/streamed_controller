@@ -9,7 +9,7 @@ import 'package:streamed_controller/src/controller.dart';
 /// {@template streamed_scope}
 /// StreamedScope widget.
 /// {@endtemplate}
-abstract class StreamedScope<T extends BaseStreamedController>
+abstract class StreamedScope<T extends StreamedController>
     extends InheritedNotifier<T> {
   /// {@macro streamed_scope}
   const StreamedScope({

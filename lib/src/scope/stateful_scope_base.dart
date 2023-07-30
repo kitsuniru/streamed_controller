@@ -9,7 +9,7 @@ import 'package:streamed_controller/src/controller.dart';
 
 import 'scope_base.dart';
 
-class _InheritedStreamedScope<T extends BaseStreamedController>
+class _InheritedStreamedScope<T extends StreamedController>
     extends StreamedScope<T> {
   const _InheritedStreamedScope({
     required super.controller,
@@ -18,7 +18,7 @@ class _InheritedStreamedScope<T extends BaseStreamedController>
 }
 
 /// Declarative scope that controls full flow of controller lifecycle
-abstract class StatefulStreamedScope<T extends BaseStreamedController>
+abstract class StatefulStreamedScope<T extends StreamedController>
     extends StatefulWidget {
   const StatefulStreamedScope({
     super.key,
@@ -36,7 +36,7 @@ abstract class StatefulStreamedScope<T extends BaseStreamedController>
       _StatefulStreamedScopeState<T>();
 }
 
-class _StatefulStreamedScopeState<T extends BaseStreamedController>
+class _StatefulStreamedScopeState<T extends StreamedController>
     extends State<StatefulStreamedScope<T>> {
   late final $controller = widget.provide;
 

@@ -1,92 +1,60 @@
-import 'dart:developer';
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:streamed_controller/src/observer/controller_observer.dart';
 import 'package:streamed_controller/streamed_controller.dart';
 
-class TestControllerBase extends BaseStreamedController<int> {
-  TestControllerBase() : super(initialState: 0);
+class TestControllerBase extends StreamedController<int> {
+  TestControllerBase({required HandlerBase<int> handleHandler})
+      : super(initialState: 0, eventHandler: handleHandler);
 
-  Future<void> incrementAwaitable() async => await event(() async* {
-        yield 1;
+  Future<void> incrementAwaitable() async => handle(() async* {
         await Future.delayed(const Duration(seconds: 1));
-        yield 2;
+        yield state + 1;
       }());
 
-  void increment() => event(() async* {
-        yield 3;
-        await Future.delayed(const Duration(seconds: 2));
-        yield 4;
-      }());
-}
-
-class RestartableController = TestControllerBase
-    with StreamedSingleSubMixin, RestartableConcurrencyMixin;
-class DroppableController = TestControllerBase
-    with StreamedSingleSubMixin, DroppableConcurrencyMixin;
-class ConcurrentController = TestControllerBase with ConcurrentConcurrencyMixin;
-
-class SequentalController extends TestControllerBase
-    with SequentalConcurrentMixin {
-  @override
-  void increment() => event(() async* {
-        yield state + 1;
-        await Future.delayed(const Duration(seconds: 2));
-        yield state + 1;
+  void clear() => handle(() async* {
+        yield 0;
       }());
 }
 
 void main() {
-  test('async increment state', () async {
-    final controller = DroppableController();
-    StreamedControllerObserver.observer = BaseControllerObserver();
+  StreamedController.observer = StreamedControllerObserver.dartLog();
+  final sequentalController =
+      TestControllerBase(handleHandler: SequentalConcurrentHandler());
+  final droppableController =
+      TestControllerBase(handleHandler: DroppableConcurrencyHandler());
+  final concurrentController =
+      TestControllerBase(handleHandler: ConcurrentConcurrencyHandler());
+  final restartableController =
+      TestControllerBase(handleHandler: RestartableConcurrencyHandler());
 
-    await controller.incrementAwaitable();
-    await controller.incrementAwaitable();
-    await controller.incrementAwaitable();
-    await controller.incrementAwaitable();
-    expect(controller.state, 2);
-  });
-
-  test('restartable test', () async {
-    final controller = RestartableController();
-    controller.addListener(
-        () => log('[${controller.runtimeType}] State: ${controller.state}'));
-
-    controller.increment();
-    await Future.delayed(const Duration(seconds: 1));
-    controller.increment();
-    await Future.delayed(const Duration(seconds: 1));
-    await controller.incrementAwaitable();
-    expect(controller.state, 2);
-    controller.increment();
-    await Future.delayed(const Duration(seconds: 3));
-    expect(controller.state, 4);
-  });
-
-  test('concurrent test', () async {
-    final controller = ConcurrentController();
-    controller.addListener(
-        () => log('[${controller.runtimeType}] State: ${controller.state}'));
-
-    await controller.incrementAwaitable();
-    await controller.incrementAwaitable();
-    await controller.incrementAwaitable();
-    await controller.incrementAwaitable();
+  test('sequentalTest', () async {
+    sequentalController.incrementAwaitable();
+    sequentalController.incrementAwaitable();
+    sequentalController.incrementAwaitable();
+    sequentalController.incrementAwaitable();
+    sequentalController.incrementAwaitable();
 
     await Future.delayed(const Duration(seconds: 6));
-    expect(controller.state, 2);
+    expect(sequentalController.state, 5);
   });
 
-  test('sequental test', () async {
-    final controller = SequentalController();
-    controller.addListener(
-        () => log('[${controller.runtimeType}] State: ${controller.state}'));
+  test('droppableController', () async {
+    await droppableController.incrementAwaitable();
+    await droppableController.incrementAwaitable();
+    await droppableController.incrementAwaitable();
+    await droppableController.incrementAwaitable();
+    await droppableController.incrementAwaitable();
 
-    controller.increment();
-    controller.increment();
+    await Future.delayed(const Duration(seconds: 6));
+    expect(droppableController.state, 5);
+  });
 
-    await Future.delayed(const Duration(seconds: 8));
-    expect(controller.state, 4);
+  test('restartableController', () async {
+    restartableController.incrementAwaitable();
+    restartableController.incrementAwaitable();
+    restartableController.incrementAwaitable();
+    restartableController.incrementAwaitable();
+    restartableController.incrementAwaitable();
+    await Future.delayed(const Duration(seconds: 3));
+    expect(restartableController.state, 1);
   });
 }

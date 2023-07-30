@@ -6,11 +6,13 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:streamed_controller/src/observer/controller_observer.dart';
+import 'package:streamed_controller/streamed_controller.dart';
 
 /// Base class for all inherited controllers
-abstract class BaseStreamedController<State extends Object>
-    with ChangeNotifier {
+abstract class StreamedController<State extends Object> with ChangeNotifier {
+  late final HandlerBase<State> _eventHandler;
+  static StreamedControllerObserver? observer;
+
   /* Streaming */
   StreamController<State>? _lazyStream;
 
@@ -33,10 +35,10 @@ abstract class BaseStreamedController<State extends Object>
   @protected
   @nonVirtual
   void $setState(State state) {
-    StreamedControllerObserver.observer?.onStateChanged(this, _state, state);
     _state = state;
 
     notifyListeners();
+    observer?.onStateChanged(this, _state, state);
   }
 
   /// Maximum processing time for each event
@@ -47,35 +49,26 @@ abstract class BaseStreamedController<State extends Object>
 
   @override
   void dispose() {
-    StreamedControllerObserver.observer?.onDispose(this);
+    observer?.onDispose(this);
     _lazyStream?.close();
     super.dispose();
   }
 
   @nonVirtual
   @protected
-  FutureOr<void> event(Stream<State> $stream) async =>
-      (StreamedControllerObserver.observer?.handleError ??
-              (FutureOr<void> $) async => $)
-          .call($handle($stream));
+  Future<void> handle(Stream<State> $stream) async =>
+      _eventHandler.handle($stream, $setState).catchError(
+          (error, stackTrace) => observer?.onError(this, error, stackTrace));
 
-  /// Use `event` instead of `$handle` for describing state's flow via stream
-  /// Using this method directly means no internal error handling
+  /// Default constructor to `StreamedController`
   ///
-  /// Ideally this method should be privated
-  @protected
-  FutureOr<void> $handle(Stream<State> $stream) async =>
-      throw UnimplementedError(
-          'Controller should use one of concurrency mixin');
-
-  @protected
-  @nonVirtual
-  void $onError(Object? error, StackTrace stackTrace) =>
-      StreamedControllerObserver.observer?.onError(this,
-          error ?? Exception('Internal exception on $runtimeType'), stackTrace);
-
-  BaseStreamedController({required State initialState})
-      : _state = initialState {
-    StreamedControllerObserver.observer?.onCreate(this);
+  /// If `eventHandler` isn't provided then `ConcurrentConcurrencyHandler` used
+  /// instead
+  StreamedController({
+    required State initialState,
+    HandlerBase<State>? eventHandler,
+  })  : _state = initialState,
+        _eventHandler = eventHandler ?? ConcurrentConcurrencyHandler() {
+    observer?.onCreate(this);
   }
 }
