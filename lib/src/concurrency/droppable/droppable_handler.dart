@@ -8,8 +8,7 @@ import 'package:streamed_controller/src/concurrency/base_handler.dart';
 
 /// Handler that ignores the processing of all events
 /// if something else is being processed at the moment
-class DroppableConcurrencyHandler<State extends Object>
-    extends SingleSubscriptionHandlerBase<State> {
+class DroppableConcurrencyHandler<State extends Object> extends SingleSubscriptionHandlerBase<State> {
   bool _isProcessing = false;
 
   DroppableConcurrencyHandler();
@@ -27,18 +26,17 @@ class DroppableConcurrencyHandler<State extends Object>
   }
 
   @override
+  String toString() => 'Droppable';
+
+  @override
   @nonVirtual
   bool get isProcessing => _isProcessing;
 
   @override
-  Future<void> handle(
-      Stream<State> $stream, void Function(State) stateCallback) async {
+  Future<void> handle(Stream<State> $stream, void Function(State) stateCallback) async {
     if ($subscription != null) return;
     _isProcessing = true;
     $subscription = $stream.listen(stateCallback);
-    return $subscription
-        ?.asFuture<void>()
-        .whenComplete(_$endSub)
-        .onError(_$catchError);
+    return $subscription?.asFuture<void>().whenComplete(_$endSub).onError(_$catchError);
   }
 }

@@ -1,3 +1,7 @@
+## 1.1.0
+* feat: handler now can accept eventName that marks each event
+* feat: StreamedObserver now have onEvent(Controller, String eventName)
+
 ## 1.0.0
 * BREAKING: StreamedController now uses custom handlers which passes into constructor (or directly into `super.eventHandler`) instead of mixins
 

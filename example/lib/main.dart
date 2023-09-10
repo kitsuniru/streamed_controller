@@ -6,10 +6,9 @@ void main() {
 }
 
 class TestControllerBase extends StreamedController<int> {
-  TestControllerBase()
-      : super(initialState: 0, eventHandler: SequentalConcurrentHandler());
+  TestControllerBase() : super(initialState: 0, eventHandler: SequentalConcurrentHandler());
 
-  void increment() => handle(_increment());
+  void increment() => handle(_increment(), eventName: 'increment');
 
   Stream<int> _increment() => () async* {
         yield state + 1;
@@ -48,8 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    $controller.addListener(() =>
-        print('[${$controller.runtimeType}] State: ${$controller.state}'));
+    $controller.addListener(() => print('[${$controller.runtimeType}] State: ${$controller.state}'));
     super.initState();
   }
 

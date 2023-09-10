@@ -10,8 +10,7 @@ import 'package:streamed_controller/src/utils/duration_extension.dart';
 /// Additional transformer handler over [DroppableConcurrency]
 /// Throttling is used to process a stream after every [throttleDuration]
 /// Note: first event processed immediatly
-class ThrottledDroppableConcurrencyHandler<State extends Object>
-    extends DroppableConcurrencyHandler<State> {
+class ThrottledDroppableConcurrencyHandler<State extends Object> extends DroppableConcurrencyHandler<State> {
   DateTime? _$lastRun;
 
   final Duration throttleDuration;
@@ -21,8 +20,7 @@ class ThrottledDroppableConcurrencyHandler<State extends Object>
             'Use DroppableConcurrencyHandler instead if you\'re doesn\'t wants to apply throttling to event handler');
 
   @override
-  Future<void> handle(
-      Stream<State> $stream, void Function(State) stateCallback) async {
+  Future<void> handle(Stream<State> $stream, void Function(State) stateCallback) async {
     final $lastRun = _$lastRun;
     final now = DateTime.now();
 
@@ -38,4 +36,7 @@ class ThrottledDroppableConcurrencyHandler<State extends Object>
       return super.handle($stream, stateCallback);
     }
   }
+
+  @override
+  String toString() => 'Droppable, throttle: $throttleDuration';
 }

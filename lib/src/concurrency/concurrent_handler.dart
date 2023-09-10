@@ -8,8 +8,7 @@ import 'dart:async';
 import 'package:streamed_controller/src/concurrency/base_handler.dart';
 
 /// Handler that simultaneously process every event that comes from user asy
-class ConcurrentConcurrencyHandler<State extends Object>
-    extends HandlerBase<State> {
+class ConcurrentConcurrencyHandler<State extends Object> extends HandlerBase<State> {
   int _$processingCalls = 0;
 
   Future<void> _cancelSub(StreamSubscription $subscription) async {
@@ -21,8 +20,7 @@ class ConcurrentConcurrencyHandler<State extends Object>
   bool get isProcessing => _$processingCalls > 0;
 
   @override
-  Future<void> handle(
-      Stream<State> $stream, void Function(State) stateCallback) {
+  Future<void> handle(Stream<State> $stream, void Function(State) stateCallback) {
     final $subscription = ($stream).listen(stateCallback);
     _$processingCalls++;
     $subscription.onDone(() => _cancelSub($subscription));
@@ -38,6 +36,8 @@ class ConcurrentConcurrencyHandler<State extends Object>
     // nothing to dispose
     // possible violation of I principle from SOLID
   }
+  @override
+  String toString() => 'Concurrent';
 
   ConcurrentConcurrencyHandler();
 }

@@ -56,9 +56,15 @@ abstract class StreamedController<State extends Object> with ChangeNotifier {
 
   @nonVirtual
   @protected
-  Future<void> handle(Stream<State> $stream) async =>
-      _eventHandler.handle($stream, $setState).catchError(
-          (error, stackTrace) => observer?.onError(this, error, stackTrace));
+  Future<void> handle(Stream<State> $stream, {required String eventName}) async {
+    observer?.onEvent.call(this, eventName);
+    await _eventHandler
+        .handle($stream, $setState)
+        .catchError((error, stackTrace) => observer?.onError(this, error, stackTrace));
+  }
+
+  @override
+  String toString() => '$runtimeType($_eventHandler)';
 
   /// Default constructor to `StreamedController`
   ///

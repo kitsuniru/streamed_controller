@@ -6,12 +6,14 @@ import 'package:meta/meta.dart';
 abstract class HandlerBase<State extends Object> {
   void dispose();
   bool get isProcessing;
-  Future<void> handle(
-      Stream<State> $stream, void Function(State) stateCallback);
+  Future<void> handle(Stream<State> $stream, void Function(State) stateCallback);
+
+  @override
+  @mustBeOverridden
+  String toString();
 }
 
-abstract class SingleSubscriptionHandlerBase<State extends Object>
-    implements HandlerBase<State> {
+abstract class SingleSubscriptionHandlerBase<State extends Object> implements HandlerBase<State> {
   StreamSubscription<State>? $subscription;
 
   @override
@@ -30,10 +32,12 @@ abstract class SingleSubscriptionHandlerBase<State extends Object>
   }
 
   @override
-  Future<void> handle(
-          Stream<State> $stream, void Function(State) stateCallback) =>
-      throw UnimplementedError(
-          '$runtimeType does not have a specific implementation of event handling');
+  Future<void> handle(Stream<State> $stream, void Function(State) stateCallback) =>
+      throw UnimplementedError('$runtimeType does not have a specific implementation of event handling');
 
   SingleSubscriptionHandlerBase();
+
+  @override
+  @mustBeOverridden
+  String toString() => 'SingleSubscriptionHandlerBase';
 }

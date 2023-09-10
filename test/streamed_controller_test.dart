@@ -2,29 +2,25 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:streamed_controller/streamed_controller.dart';
 
 class TestControllerBase extends StreamedController<int> {
-  TestControllerBase({required HandlerBase<int> handleHandler})
-      : super(initialState: 0, eventHandler: handleHandler);
+  TestControllerBase({required HandlerBase<int> handleHandler}) : super(initialState: 0, eventHandler: handleHandler);
 
   Future<void> incrementAwaitable() async => handle(() async* {
         await Future.delayed(const Duration(seconds: 1));
+        Error.throwWithStackTrace(Exception('test_exception'), StackTrace.fromString('lbalbalb'));
         yield state + 1;
-      }());
+      }(), eventName: 'asynchronous await');
 
   void clear() => handle(() async* {
         yield 0;
-      }());
+      }(), eventName: 'clear');
 }
 
 void main() {
   StreamedController.observer = StreamedControllerObserver.dartLog();
-  final sequentalController =
-      TestControllerBase(handleHandler: SequentalConcurrentHandler());
-  final droppableController =
-      TestControllerBase(handleHandler: DroppableConcurrencyHandler());
-  final concurrentController =
-      TestControllerBase(handleHandler: ConcurrentConcurrencyHandler());
-  final restartableController =
-      TestControllerBase(handleHandler: RestartableConcurrencyHandler());
+  final sequentalController = TestControllerBase(handleHandler: SequentalConcurrentHandler());
+  final droppableController = TestControllerBase(handleHandler: DroppableConcurrencyHandler());
+  final concurrentController = TestControllerBase(handleHandler: ConcurrentConcurrencyHandler());
+  final restartableController = TestControllerBase(handleHandler: RestartableConcurrencyHandler());
 
   test('sequentalTest', () async {
     sequentalController.incrementAwaitable();
@@ -39,9 +35,9 @@ void main() {
 
   test('droppableController', () async {
     await droppableController.incrementAwaitable();
+    droppableController.incrementAwaitable();
     await droppableController.incrementAwaitable();
-    await droppableController.incrementAwaitable();
-    await droppableController.incrementAwaitable();
+    droppableController.incrementAwaitable();
     await droppableController.incrementAwaitable();
 
     await Future.delayed(const Duration(seconds: 6));
