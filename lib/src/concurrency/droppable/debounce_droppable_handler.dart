@@ -16,7 +16,7 @@ class DebouncedDroppableConcurrencyHandler<State extends Object> extends Droppab
   final Duration debounceDuration;
 
   DebouncedDroppableConcurrencyHandler({required this.debounceDuration})
-      : assert(debounceDuration == Duration.zero,
+      : assert(debounceDuration != Duration.zero,
             'Use DroppableConcurrencyHandler instead if you\'re doesn\'t wants to apply debouncing to event handler');
 
   @override

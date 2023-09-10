@@ -16,7 +16,7 @@ class ThrottledDroppableConcurrencyHandler<State extends Object> extends Droppab
   final Duration throttleDuration;
 
   ThrottledDroppableConcurrencyHandler({required this.throttleDuration})
-      : assert(throttleDuration == Duration.zero,
+      : assert(throttleDuration != Duration.zero,
             'Use DroppableConcurrencyHandler instead if you\'re doesn\'t wants to apply throttling to event handler');
 
   @override
