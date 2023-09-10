@@ -6,6 +6,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:streamed_controller/src/utils/stream_extension.dart';
 import 'package:streamed_controller/streamed_controller.dart';
 
 /// Base class for all inherited controllers
@@ -34,7 +35,7 @@ abstract class StreamedController<State extends Object> with ChangeNotifier {
 
   @protected
   @nonVirtual
-  void $setState(State state) {
+  void _$setState(State state) {
     _state = state;
 
     notifyListeners();
@@ -56,10 +57,10 @@ abstract class StreamedController<State extends Object> with ChangeNotifier {
 
   @nonVirtual
   @protected
-  Future<void> handle(Stream<State> $stream, {required String eventName}) async {
+  Future<void> handle(Stream<State?> $stream, {required String eventName}) async {
     observer?.onEvent.call(this, eventName);
     await _eventHandler
-        .handle($stream, $setState)
+        .handle($stream.whereNotNull(), _$setState)
         .catchError((error, stackTrace) => observer?.onError(this, error, stackTrace));
   }
 
