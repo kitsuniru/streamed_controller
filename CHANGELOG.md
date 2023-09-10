@@ -1,3 +1,6 @@
+# 1.1.1
+* feat: now you can create nullable state streams (Stream<State?>)
+* fix: hide internal $setState from overriding
 ## 1.1.0
 * feat: handler now can accept eventName that marks each event
 * feat: StreamedObserver now have onEvent(Controller, String eventName)
