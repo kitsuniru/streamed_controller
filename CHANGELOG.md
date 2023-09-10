@@ -1,3 +1,6 @@
+# 1.1.2
+* fix: incorrect assertion on (Throttle/Debounce)DroppableConcurrency fixed
+
 # 1.1.1
 * feat: now you can create nullable state streams (Stream<State?>)
 * fix: hide internal $setState from overriding
