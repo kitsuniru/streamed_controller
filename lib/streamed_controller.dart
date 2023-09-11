@@ -10,5 +10,4 @@ export 'src/listenable_selector.dart';
 export 'src/observer/controller_observer.dart';
 export 'src/scope/scope_base.dart';
 export 'src/scope/stateful_scope_base.dart';
-export 'src/utils/async_queue.dart';
-export 'src/utils/duration_extension.dart';
+export 'src/state_consumer.dart';

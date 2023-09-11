@@ -1,3 +1,6 @@
+# 1.2.0
+* feat: Consumer: adds StreamedStateConsumer with listener and builder
+
 # 1.1.2
 * fix: incorrect assertion on (Throttle/Debounce)DroppableConcurrency fixed
 

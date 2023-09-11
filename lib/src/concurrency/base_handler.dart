@@ -1,3 +1,8 @@
+/*
+ *
+ * Archie Kitsushimo <Kitsushimo.dev@gmail.com>, 11 September 2023
+ */
+
 import 'dart:async';
 
 import 'package:meta/meta.dart';

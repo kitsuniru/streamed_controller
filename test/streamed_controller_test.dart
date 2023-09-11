@@ -6,7 +6,7 @@ class TestControllerBase extends StreamedController<int> {
 
   Future<void> incrementAwaitable() async => handle(() async* {
         await Future.delayed(const Duration(seconds: 1));
-        Error.throwWithStackTrace(Exception('test_exception'), StackTrace.fromString('lbalbalb'));
+
         yield state + 1;
       }(), eventName: 'asynchronous await');
 
@@ -19,7 +19,6 @@ void main() {
   StreamedController.observer = StreamedControllerObserver.dartLog();
   final sequentalController = TestControllerBase(handleHandler: SequentalConcurrentHandler());
   final droppableController = TestControllerBase(handleHandler: DroppableConcurrencyHandler());
-  final concurrentController = TestControllerBase(handleHandler: ConcurrentConcurrencyHandler());
   final restartableController = TestControllerBase(handleHandler: RestartableConcurrencyHandler());
 
   test('sequentalTest', () async {
