@@ -1,6 +1,6 @@
 name: streamed_controller
 description: A predictable state management library with prebuilt concurrency helpers that implement the Business Logic Component design pattern without complexity of BLoC.
-version: 1.1.2
+version: 1.2.0
 repository: https://github.com/hot-moms/streamed_controller
 issue_tracker: https://github.com/hot-moms/streamed_controller/issues
 homepage: https://github.com/hot-moms/streamed_controller
