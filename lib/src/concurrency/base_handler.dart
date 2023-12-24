@@ -1,6 +1,6 @@
 /*
  *
- * Archie Kitsushimo <Kitsushimo.dev@gmail.com>, 11 September 2023
+ * Archie Kitsuniru <archie@kitsuniru.dev>, 11 September 2023
  */
 
 import 'dart:async';

@@ -1,6 +1,6 @@
 /*
  * Debounced droppable concurrency handler for streamed_controller
- * Archie Kitsushimo <Kitsushimo.dev@gmail.com>, 29 July 2023
+ * Archie Kitsuniru <archie@kitsuniru.dev>, 29 July 2023
  */
 
 import 'dart:async';

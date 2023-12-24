@@ -1,7 +1,7 @@
 /*
  * Throttled droppable concurrency handler for streamed_controller
  * Built over [DroppableConcurrencyMixin]
- * Archie Kitsushimo <Kitsushimo.dev@gmail.com>, 25 July 2023
+ * Archie Kitsuniru <archie@kitsuniru.dev>, 25 July 2023
  */
 
 import 'package:streamed_controller/src/concurrency/droppable/droppable_handler.dart';

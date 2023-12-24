@@ -1,26 +1,34 @@
 <!--
 streamed_controller
-2023, Archie Iwakura
+2023, Archie Kitsuniru
 -->
 
 # streamed_controller
 
- Tiny predictable opinionated state management package with prebuilt concurrency handlers that implement the Business Logic Component design pattern without complexity of flutter_bloc.
+Tiny predictable opinionated state management package with prebuilt concurrency
+handlers that implement the Business Logic Component design pattern without
+complexity of flutter_bloc.
 
 ## Features
 
-* Concurrency: supports variative and expandable concurrency handlers (droppable, throttled, debounced, concurrent, restartable) and gives you possibility to create your own concurrency handler
-* No third-part dependencies: based on Flutter's `ChangeNotifier`, `Stream` and `InheritedNotifier` for scoping
-* Can be listened in various ways: `ListenableBuilder`, `InheritedWidget/InheritedNotifier`, `StreamBuilder`, etc..
-* Ready to complex state managment: can handle many various cases like auth, pagination, notifications, complex loading and state handling
+- Concurrency: supports variative and expandable concurrency handlers
+  (droppable, throttled, debounced, concurrent, restartable) and gives you
+  possibility to create your own concurrency handler
+- No third-part dependencies: based on Flutter's `ChangeNotifier`, `Stream` and
+  `InheritedNotifier` for scoping
+- Can be listened in various ways: `ListenableBuilder`,
+  `InheritedWidget/InheritedNotifier`, `StreamBuilder`, etc..
+- Ready to complex state managment: can handle many various cases like auth,
+  pagination, notifications, complex loading and state handling
 
 ## Getting started
 
-```flutter pub add streamed_controller```
+`flutter pub add streamed_controller`
 
 ## Usage
 
-1) Define controller class (and state class, if you using streamed_controller for complex state managment):
+1. Define controller class (and state class, if you using streamed_controller
+   for complex state managment):
 
 ```dart
 class TestControllerBase extends StreamedController<int>  {
@@ -36,14 +44,15 @@ class TestControllerBase extends StreamedController<int>  {
 }
 ```
 
-2) Create controller variable in any place where you ready to store it (Stateful Scopes, Singletons or other storages):
-
+2. Create controller variable in any place where you ready to store it (Stateful
+   Scopes, Singletons or other storages):
 
 ```dart
 final $controller = TestControllerBase();
 ```
 
-3) Wrap widget which will reacts to controller changes into ListenableBuilder/AnimatedBuilder:
+3. Wrap widget which will reacts to controller changes into
+   ListenableBuilder/AnimatedBuilder:
 
 ```dart
 ListenableBuilder(
@@ -54,7 +63,8 @@ ListenableBuilder(
         ))
 ```
 
-4) And then call these functions from your code
+4. And then call these functions from your code
+
 ```dart
 FloatingActionButton(
     onPressed: $controller.increment,
@@ -65,13 +75,17 @@ FloatingActionButton(
 
 ### Observing
 
-To create your own controller observer, that watches for all controller's lifecycles, you need to extend StreamedControllerObserver and override its methods:
+To create your own controller observer, that watches for all controller's
+lifecycles, you need to extend StreamedControllerObserver and override its
+methods:
+
 - `onCreate`
 - `onDispose`
 - `onError`
 - `onStateChanged`
 
-Then you need to assign a static variable `observer` to your observer object in the initialization (or other place) of your code
+Then you need to assign a static variable `observer` to your observer object in
+the initialization (or other place) of your code
 `StreamedController.observer = MyCoolObserver();`
 
 By default, you can try logger that uses internal `dart:developer` `log` method
@@ -100,17 +114,17 @@ class _TestControllerObserver extends StreamedControllerObserver {
           Object nextState) =>
       log('${controller.runtimeType} state updated, new state: $nextState');
 }
-
 ```
-
 
 ### Streams
 
-`StreamedController` exposes `stateChanges` lazy `Stream<State>` that emits new state to it listeners, basing on Stream API
-In general, you won't have to use this stream for rebuilding states or etc, because you have all features from `ChangeNotifier` API
+`StreamedController` exposes `stateChanges` lazy `Stream<State>` that emits new
+state to it listeners, basing on Stream API In general, you won't have to use
+this stream for rebuilding states or etc, because you have all features from
+`ChangeNotifier` API
 
 `stateChanges` stream is lazy, which means it doesn't create until first call
 
 ---
 
-2023, Archie Iwakura (hot-moms)
+2023, Archie Kitsuniru (kitsuniru)

@@ -1,7 +1,7 @@
 /*
  * Base class for self-handling Stateful scope that can get controller via
  * `provide` parameters
- * Archie Kitsushimo <Kitsushimo.dev@gmail.com>, 29 July 2023
+ * Archie Kitsuniru <archie@kitsuniru.dev>, 29 July 2023
  */
 
 import 'package:flutter/widgets.dart';
@@ -9,8 +9,7 @@ import 'package:streamed_controller/src/controller.dart';
 
 import 'scope_base.dart';
 
-class _InheritedStreamedScope<T extends StreamedController>
-    extends StreamedScope<T> {
+class _InheritedStreamedScope<T extends StreamedController> extends StreamedScope<T> {
   const _InheritedStreamedScope({
     required super.controller,
     required super.child,
@@ -18,8 +17,7 @@ class _InheritedStreamedScope<T extends StreamedController>
 }
 
 /// Declarative scope that controls full flow of controller lifecycle
-abstract class StatefulStreamedScope<T extends StreamedController>
-    extends StatefulWidget {
+abstract class StatefulStreamedScope<T extends StreamedController> extends StatefulWidget {
   const StatefulStreamedScope({
     super.key,
     required this.provide,
@@ -32,17 +30,14 @@ abstract class StatefulStreamedScope<T extends StreamedController>
   final Widget child;
 
   @override
-  State<StatefulStreamedScope<T>> createState() =>
-      _StatefulStreamedScopeState<T>();
+  State<StatefulStreamedScope<T>> createState() => _StatefulStreamedScopeState<T>();
 }
 
-class _StatefulStreamedScopeState<T extends StreamedController>
-    extends State<StatefulStreamedScope<T>> {
+class _StatefulStreamedScopeState<T extends StreamedController> extends State<StatefulStreamedScope<T>> {
   late final $controller = widget.provide;
 
   @override
-  Widget build(BuildContext context) =>
-      _InheritedStreamedScope(controller: $controller, child: widget.child);
+  Widget build(BuildContext context) => _InheritedStreamedScope(controller: $controller, child: widget.child);
 
   @override
   void dispose() {

@@ -1,6 +1,6 @@
 /*
  * AsyncQueue
- * Archie Kitsushimo <Kitsushimo.dev@gmail.com>, 25 July 2023
+ * Archie Kitsuniru <archie@kitsuniru.dev>, 25 July 2023
  */
 
 import 'dart:async';

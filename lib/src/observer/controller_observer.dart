@@ -1,6 +1,6 @@
 /*
  *
- * Archie Kitsushimo <Kitsushimo.dev@gmail.com>, 11 September 2023
+ * Archie Kitsuniru <archie@kitsuniru.dev>, 11 September 2023
  */
 
 import 'dart:developer';
@@ -15,8 +15,7 @@ class StreamedControllerObserver {
 
   factory StreamedControllerObserver.dartLog() => _TestControllerObserver();
 
-  static Never _overrideError() =>
-      throw UnimplementedError('This method should be overrided with your own logging package/solution');
+  static Never _overrideError() => throw UnimplementedError('This method should be overrided with your own logging package/solution');
 
   @mustBeOverridden
   void onCreate(StreamedController controller) => _overrideError();
@@ -41,8 +40,7 @@ class _TestControllerObserver extends StreamedControllerObserver {
   @override
   void onDispose(StreamedController<Object> controller) => log('[$controller] Controller disposed');
   @override
-  void onError(StreamedController<Object>? controller, Object? error, StackTrace stackTrace) =>
-      log('[$controller] Error: $error');
+  void onError(StreamedController<Object>? controller, Object? error, StackTrace stackTrace) => log('[$controller] Error: $error');
 
   @override
   void onStateChanged(StreamedController<Object> controller, Object prevState, Object nextState) =>

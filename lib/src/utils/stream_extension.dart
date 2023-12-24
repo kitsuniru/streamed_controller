@@ -1,6 +1,6 @@
 /*
  *
- * Archie Kitsushimo <Kitsushimo.dev@gmail.com>, 25 July 2023
+ * Archie Kitsuniru <archie@kitsuniru.dev>, 25 July 2023
  */
 
 extension StreamExt<T extends Object> on Stream<T?> {
